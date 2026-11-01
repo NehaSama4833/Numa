@@ -6,12 +6,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
-# 1. Load (online, otherwise the CSV)
-try:
-    from sklearn.datasets import fetch_california_housing
-    df = fetch_california_housing(as_frame=True).frame
-except Exception:
-    df = pd.read_csv("california_housing.csv")
+# 1. Load
+df = pd.read_csv("california_housing.csv")
 X = df.drop(columns="MedHouseVal")
 y = df["MedHouseVal"]
 print(X.shape)
