@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_diabetes
@@ -18,24 +17,15 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-# 4. VIF (multicollinearity check)
-for i, name in enumerate(X.columns):
-    others = np.delete(X_train, i, axis=1)
-    r2 = LinearRegression().fit(others, X_train[:, i]).score(others, X_train[:, i])
-    print(name, "VIF:", round(1 / (1 - r2), 1))
-
-# 5. Fit and score three models
+# 4. Three models
 models = {"Linear": LinearRegression(), "Ridge": Ridge(alpha=10), "Lasso": Lasso(alpha=1)}
 coefs = {}
 for name, model in models.items():
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     coefs[name] = model.coef_
-    print(name, "| Test MSE:", round(mean_squared_error(y_test, y_pred), 1),
-          "| R2:", round(r2_score(y_test, y_pred), 4),
-          "| Zero coefs:", int((model.coef_ == 0).sum()))
+    print(name, "| MSE:", round(mean_squared_error(y_test, y_pred), 1), "| R2:", round(r2_score(y_test, y_pred), 4))
 
-# 6. Plot coefficients
-pd.DataFrame(coefs, index=X.columns).plot(kind="bar", figsize=(8, 4))
-plt.title("Coefficients: Linear vs Ridge vs Lasso")
+# 5. Plot
+pd.DataFrame(coefs, index=X.columns).plot(kind="bar")
 plt.show()
